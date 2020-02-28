@@ -280,7 +280,6 @@ def patch_common(fin, fout, lb, code_last_run, codelist, trace, ins_mgr, addr2bl
             movt xxxxx
             movw xxxxx
             直接替换成
-            nop
             bne xxxx
             b xxx
             nop
@@ -347,6 +346,10 @@ def patch_logical_blocks(fin, fout, logic_blocks, obfuses_blocks, trace, ins_mgr
             if (jmp_addr in addr2ofb):
                 #跳转到控制块的，说明要修正到真实块
                 #print ("logic block with b %r should fix 0x%08X"%(lb, code_last.address))
+                patch_common(fin, fout, lb, code_last, codelist, trace, ins_mgr, addr2ofb_can_use)
+            #
+            elif (is_jmp_condition(code_last) and lb.end in addr2ofb):
+                #如果是条件跳转，除了考虑目的地，还要考虑下一条指令是否在控制块
                 patch_common(fin, fout, lb, code_last, codelist, trace, ins_mgr, addr2ofb_can_use)
             #
         #
