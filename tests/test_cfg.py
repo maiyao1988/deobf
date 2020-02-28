@@ -32,7 +32,7 @@ class TestCfg(unittest.TestCase):
         CodeBlock(0x0000D47C, 0x0000D484), CodeBlock(0x0000D484, 0x0000D4B4), CodeBlock(0x0000D4B4, 0x0000D4C8), 
         CodeBlock(0x0000D4C8, 0x0000D4D8), CodeBlock(0x0000D4D8, 0x0000D518)]
 
-        with open("vfs/system/lib/libc.so", "rb") as f:
+        with open("tests/bin/libc.so", "rb") as f:
             blocks = cfg.create_cfg(f, 0x0000D218, 768, False)
             #print(blocks[9])
             #print(blocks[9].parent)
