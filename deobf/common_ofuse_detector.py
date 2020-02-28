@@ -1,7 +1,7 @@
-from deofuse.intruction_mgr import IntructionManger
-from deofuse.ins_helper import *
-from deofuse import cfg
-from deofuse import tracer
+from deobf.intruction_mgr import IntructionManger
+from deobf.ins_helper import *
+from deobf import cfg
+from deobf import tracer
 
 def _start_withs(str, sets):
     for s in sets:

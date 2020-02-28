@@ -2,7 +2,7 @@ import os
 import sys
 import capstone
 import keystone
-from deofuse.ins_helper import *
+from deobf.ins_helper import *
 
 class IntructionManger:
     

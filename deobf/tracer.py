@@ -1,7 +1,7 @@
 import os
 import sys
-from deofuse.ins_helper import *
-from deofuse.cfg import addr_in_blocks
+from deobf.ins_helper import *
+from deobf.cfg import addr_in_blocks
 
 def get_ins_bytes_by_line(line):
     p = line.find(")")

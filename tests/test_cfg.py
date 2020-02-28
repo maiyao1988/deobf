@@ -4,8 +4,8 @@ import sys
 import unittest
 
 from unicorn import *
-from deofuse import cfg
-from deofuse.cfg import CodeBlock
+from deobf import cfg
+from deobf.cfg import CodeBlock
 
 class TestCfg(unittest.TestCase):
 

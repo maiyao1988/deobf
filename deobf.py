@@ -1,12 +1,12 @@
 import sys
 import os.path
-from deofuse.intruction_mgr import IntructionManger
-from deofuse.ins_helper import *
-from deofuse import cfg
-from deofuse import tracer
-from deofuse.common_ofuse_detector import CommonOfDetector
-from deofuse.bb_ofuse_detector import BBOfDetector
-from deofuse.cfg import addr_in_blocks
+from deobf.intruction_mgr import IntructionManger
+from deobf.ins_helper import *
+from deobf import cfg
+from deobf import tracer
+from deobf.common_ofuse_detector import CommonOfDetector
+from deobf.bb_ofuse_detector import BBOfDetector
+from deobf.cfg import addr_in_blocks
 import shutil
 
 

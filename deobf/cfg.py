@@ -1,8 +1,8 @@
 import os
 import capstone
 import sys
-from deofuse.intruction_mgr import IntructionManger
-from deofuse.ins_helper import *
+from deobf.intruction_mgr import IntructionManger
+from deobf.ins_helper import *
 
 def addr_in_blocks(addr, blocks):
     for b in blocks:

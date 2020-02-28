@@ -5,10 +5,10 @@ import sys
 import unittest
 
 from unicorn import *
-from deofuse import cfg
-from deofuse.cfg import CodeBlock
-from deofuse.ins_helper import *
-from deofuse.intruction_mgr import *
+from deobf import cfg
+from deobf.cfg import CodeBlock
+from deobf.ins_helper import *
+from deobf.intruction_mgr import *
 
 
 class TestAsm(unittest.TestCase):
