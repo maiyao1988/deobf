@@ -1,5 +1,5 @@
 # deobf
-ollvm like deofuscator,aim to remove obfuscate made by ollvm like compiler, exspecially FLA to make reverse engineering easier...
+A experimental ollvm like deofuscator,aim to remove obfuscate made by ollvm like compiler, exspecially FLA to make reverse engineering easier...
  
 ## Usage
 
