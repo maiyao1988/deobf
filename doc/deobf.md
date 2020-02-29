@@ -2,9 +2,8 @@
 先从一个简单的函数开始
 ```c++
 int main (int argc, const char **argv) {
-    int s = atoi(argv[1]);
-    int a = 0;
-    if (a>5) {
+    int a = atoi(argv[1]);
+    if (a > 5) {
         a = a+1;
         printf("a %d", a);
     }
