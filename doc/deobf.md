@@ -48,14 +48,14 @@ int main (int argc, const char **argv) {
 ### IDA调试记录指令方式
  - 这种方法优点是借用成熟的调试工具，无需模拟环境，上手简单，缺点是如果程序有反调试，需要先将反调试干掉。这里需要借助一下idapython脚本。链接**https://github.com/maiyao1988/IDAScripts/blob/master/trace.py**
  - 脚本的原理非常简单，在待trace函数每一条指令都下一个断点，并将断点属性改为BPT_TRACE,这样断点不会停下来，但会触发原先设置好的回调函数，在回调函数中，可以指令的地址等所有信息记录下来。最后得出含有这种内容一个trace文件。
-   ```
+ ```
 (      libxxxso[0xCBD6A000])[82 AD       ]0x0001CA34:	ADD	R5, SP, #0X208	;(SP=0x100FF248 )
 (      libxxxx.so[0xCBD6A000])[E7 20       ]0x0001CA36:	MOVS	R0, #0XE7
 (      libxxxx.so[0xCBD6A000])[F6 21       ]0x0001CA38:	MOVS	R1, #0XF6
 (      libxxxx.so[0xCBD6A000])[F0 22       ]0x0001CA3A:	MOVS	R2, #0XF0
 (      libxxxx.so[0xCBD6A000])[E0 70       ]0x0001CA3C:	STRB	R0, [R4, #3]	;(R0=0x000000E7 R4=0x100FF550 )
 (      libxxxx.so[0xCBD6A000])[21 71       ]0x0001CA3E:	STRB	R1, [R4, #4]	;(R1=0x000000F6 R4=0x100FF550 )
-   ```
+```
    
 ### 模拟执行记录指令方式
 利用模拟执行直接执行目标函数，也可以达到每条指令都记录下来的效果，优点是无视反调试(但也有可能遇到对抗)，缺点是需要准备好模拟环境，实现一些系统调用以及java函数等等，操作比较麻烦，对于android环境的模拟，开源界已经存在一些优秀项目如[AndroidNativeEmu](https://github.com/AeonLucid/AndroidNativeEmu),但由于该项目存在一些bug和一些未实现的系统调用，我拿来做了些改进[参见这里](https://github.com/maiyao1988/ExAndroidNativeEmu)
