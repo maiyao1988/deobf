@@ -1,6 +1,6 @@
 # deobf
 An experimental ollvm like deofuscator,aim to remove obfuscation made by ollvm like compiler, exspecially FLA to make reverse engineering easier...
- 
+[中文原理说明](./doc/deobf.md)
 ## Usage
 
 > In the future this will be possible through pypi.
