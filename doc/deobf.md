@@ -82,13 +82,19 @@ int main (int argc, const char **argv) {
 ## 写在最后
 需要特别指出的是，这个方法不仅仅适用与ollvm，而是适用于类似逻辑的混淆（实测大多数，区别仅是识别控制块的逻辑有点改变而已），最后放上几张效果图
  * 某视频app
+ 
  ![](./cms_before.png)
+ 
  ![](./cms_after.png)
+ 
  ![](./cms_after_f5.png)
  
  * 某加固厂商的so
+ 
  ![](./bb_before.png)
+ 
  ![](./bb_after.png)
+ 
  ![](./bb_after_f5.png)
 
 
