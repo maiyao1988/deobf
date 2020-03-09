@@ -77,7 +77,7 @@ class IntructionManger:
                 code_addr_set.add(c.address)
                 codelist.append(c)
                 #print ("0x%08X %s %s"%(c.address, c.mnemonic.upper(), c.op_str.upper()))
-                if (is_jmp(c, base_addr, len_cbs)):
+                if (is_jmp(c)):
                     #print ("get jmp %s %s 0x%08X"%(c.mnemonic, c.op_str, c.address))
                     if (is_table_jump(c)):
                         if (code_prev[0] == None or code_prev[1] == None):

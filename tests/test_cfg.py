@@ -167,4 +167,15 @@ class TestCfg(unittest.TestCase):
             #
         #
     #
+
+    '''
+    def test_cfg_cms2(self):
+        with open("tests/bin/libcms2.so", "rb") as f:
+            start = 0x00004D8C
+            sz = 0x0000525A-start
+            blocks = cfg.create_cfg(f, start, sz, True)
+            print(blocks)
+        #
+    #
+    '''
 #

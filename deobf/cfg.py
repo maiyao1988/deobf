@@ -76,7 +76,7 @@ def create_cfg(f, base_addr, size, thumb):
         #instruction_str = ''.join('{:02X} '.format(x) for x in i.bytes)
         #line = "[%16s]0x%08X:\t%s\t%s"%(instruction_str, addr, i.mnemonic.upper(), i.op_str.upper())
         #print (line)
-        if (is_jmp(i, base_addr, size)):
+        if (is_jmp(i)):
             #print("in")
             jmp_dest = get_jmp_dest(i)
             #跳转指令，需要获取跳转目标，以跳转目标为start新建block
@@ -156,7 +156,7 @@ def create_cfg(f, base_addr, size, thumb):
             #print ("cb_now %r child %r"%(cb_now, next_block))
             #pop xxx, pc mov pc, xxx and so on
             #if it is not a no return jump , there will be two branch 
-            if not is_jmp_no_ret(i, base_addr, size):
+            if not is_jmp_no_ret(i):
                 next_block = block_starts_map[addr_next_ins]
                 next_block.parent.add(cb_now)
                 cb_now.childs.add(next_block)

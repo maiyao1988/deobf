@@ -19,15 +19,15 @@ def get_free_regs(codelist):
     #
     return _reg_try - reg_used
 #
-def is_condition_ins(ins):
+def is_condition_mne(mne):
     global _cond_oposite_map
 
     for k in _cond_oposite_map:
-        if (ins.mnemonic.endswith(k)):
+        if (mne.endswith(k)):
             return True
         #
     #
-    if (ins.mnemonic.startswith("it")):
+    if (mne.startswith("it")):
         return True
     #
     return False
@@ -35,31 +35,27 @@ def is_condition_ins(ins):
 def is_jmp_condition(ins):
     global _b_cond_ins
     mne = ins.mnemonic
+    return is_jmp_condition_str(mne, ins.op_str)
+#
+
+#FIXME bug here, going to remove
+def is_jmp_condition_str(mne, op_str):
+
+    global _b_cond_ins
     if (mne in _b_cond_ins):
         return True
     elif (mne in ("cbz", "cbnz")):
         return True
     #
-    if (is_condition_ins(ins)):
+    if (is_condition_mne(mne)):
         if (mne.startswith("pop") or mne.startswith("ldm")):
-            if (ins.op_str.find("pc") > -1):
+            if (op_str.find("pc") > -1):
                 return True
         elif (mne.startswith("mov")):
-            if (ins.op_str.split()[0].strip() == "pc") and is_condition_ins(ins):
+            if (op_str.split()[0].strip() == "pc") and is_condition_mne(mne):
                 return True
             #
         #
-    #
-#
-
-#FIXME bug here, going to remove
-def is_jmp_condition_str(ins_str):
-    global _b_cond_ins
-    ins_str_sa = ins_str.lower().split()
-    if (ins_str_sa[0] in _b_cond_ins):
-        return True
-    elif (ins_str_sa[0] in ("cbz", "cbnz")):
-        return True
     #
 #
 
@@ -69,14 +65,16 @@ def is_jmp_imm(ins):
     return mne[0] == "b" and mne not in ("blx", "bl", "bic", "bics") or mne in ("cbz", "cbnz")
 #
 
-def is_table_jump(i):
-    mne = i.mnemonic
+def is_table_jump_mne(mne):
     return mne in ("tbb", "tbb.w", "tbh", "tbh.w")
 #
 
+def is_table_jump(i):
+    return is_table_jump_mne(i.mnemonic)
+#
+
 #判断是否无条件跳转,这种跳转只会产生一个分支
-def is_jmp_no_ret(i, base_addr=-1, size=-1):
-    mne = i.mnemonic
+def is_jmp_no_ret_mne(mne, op_str):
     #b xxxx
     #mov pc, xxx
     #pop xxx, pc,xxx
@@ -84,34 +82,36 @@ def is_jmp_no_ret(i, base_addr=-1, size=-1):
     if (mne == "b" or mne == "b.w"):
         return True
     
-    if (not is_condition_ins(i)):
+    if (not is_condition_mne(mne)):
         if (mne.startswith("pop") or mne.startswith("ldm")):
-            if (i.op_str.find("pc") > -1):
+            if (op_str.find("pc") > -1):
                 return True
         elif (mne.startswith("mov")):
-            if (i.op_str.split()[0].strip() == "pc"):
+            if (op_str.split()[0].strip() == "pc"):
                 return True
             #
         #
     #
 
-    if (mne in ("bl", "blx")):
-        dest = get_jmp_dest(i)
-        #这是一种反对抗行为，有些混淆会用bl作为跳转，如果bl跳转目标为本函数范围，依然认为是个普通跳转，而不是一个函数调用
-        if (dest != None and dest >= base_addr and dest < base_addr+size):
-            return True
-        #
-    #
-    if (is_table_jump(i)):
+    if (is_table_jump_mne(mne)):
         return True
     #
     return False
 #
 
-#判断是否跳转，包括无条件和有条件跳转
-def is_jmp(i, base_addr=-1, size=-1):
+#判断是否无条件跳转,这种跳转只会产生一个分支
+def is_jmp_no_ret(i):
     mne = i.mnemonic
-    if (is_jmp_no_ret(i, base_addr, size)):
+    #b xxxx
+    #mov pc, xxx
+    #pop xxx, pc,xxx
+    
+    return is_jmp_no_ret_mne(mne, i.op_str)
+#
+
+#判断是否跳转，包括无条件和有条件跳转
+def is_jmp_mne(mne, op_str):
+    if (is_jmp_no_ret_mne(mne, op_str)):
         return True
     if mne[0] == "b" and mne not in ("bl", "blx", "bic", "bics"):
         return True
@@ -121,6 +121,13 @@ def is_jmp(i, base_addr=-1, size=-1):
     #
 
     return False
+#
+
+#判断是否跳转，包括无条件和有条件跳转
+def is_jmp(i):
+    mne = i.mnemonic
+    op_str = i.op_str
+    return is_jmp_mne(mne, op_str)
 #
 
 def condi_oposite(cond):

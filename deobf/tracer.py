@@ -15,7 +15,6 @@ def get_ins_bytes_by_line(line):
 #标识指令运行的运行信息
 class Tracer:
 
-
     def __init__(self, trace_path, lib_name, start_addr, end_addr, blocks_to_trace):
         self.__lib_name = lib_name
         self.__start_addr = start_addr
@@ -24,13 +23,6 @@ class Tracer:
         self.__trace_list = []
         self.__condition_trace_map = {}
         self.__ins_count = {}
-
-        detect_for_condition_come_true = False
-        trace_for_condion_addr = 0
-        trace_for_condion_next_prefer_addr = 0
-        is_condition_come_true = False
-        trace_for_true_jmp = False
-        
 
         with open(trace_path, "r") as f:
             for line in f:
@@ -41,12 +33,6 @@ class Tracer:
                 sa = line.split(":")
                 start = sa[0].rfind("]")+1
                 addr = int(sa[0][start:], 16)
-                
-                if (detect_for_condition_come_true):
-                    #如果下一条指令，不等于上一条指令地址+指令大小，说明跳转了
-                    is_condition_come_true = (addr != trace_for_condion_next_prefer_addr)
-                    detect_for_condition_come_true = False
-                #
 
                 if (addr < start_addr or addr >= end_addr):
                     continue
@@ -64,36 +50,7 @@ class Tracer:
                 else:
                     self.__ins_count[addr] = 1
                 #
-
-                if (trace_for_true_jmp):
-                    m = None
-                    if (trace_for_condion_addr in self.__condition_trace_map):
-                        m = self.__condition_trace_map[trace_for_condion_addr]
-                    #
-                    else:
-                        m = [0, 0]
-                    #
-                    if (is_condition_come_true):
-                        m[0] = addr
-                    #
-                    else:
-                        m[1] = addr
-                    #
-                    self.__condition_trace_map[trace_for_condion_addr] = m
-
-                    trace_for_true_jmp = False
-                #
-                # 找到真实块中以b condition跳转到的另外一个真实块的真实地址，
-                ins_str = sa[1]
-                if (is_jmp_condition_str(ins_str)):
-                    detect_for_condition_come_true = True
-                    trace_for_true_jmp = True
-                    trace_for_condion_addr = addr
-                    
-                    trace_for_condion_next_prefer_addr = addr + len(get_ins_bytes_by_line(line))
-                #
             #
-            #print (self.__condition_trace_map)
         #
         #print(self.__addr2trace)
     #
