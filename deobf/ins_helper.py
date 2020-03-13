@@ -176,15 +176,14 @@ def clean_bytes(f, addr_from, addr_to):
 #
 
 
-def get_jmp_dest(i):
-    if (i.mnemonic[0] == 'b'):
-        if (i.op_str[0] == '#'):
-            jmp_addr = int(i.op_str[1:], 16)
+def get_jmp_dest_str(mne, op_str):
+    if (mne[0] == 'b'):
+        if (op_str[0] == '#'):
+            jmp_addr = int(op_str[1:], 16)
             return jmp_addr
         #
     #
-    elif (i.mnemonic in ("cbz", "cbnz")):
-        op_str = i.op_str
+    elif (mne in ("cbz", "cbnz")):
         sa = op_str.split(",")
         dest_str = sa[1].strip()
         assert dest_str[0] == '#'
@@ -192,6 +191,10 @@ def get_jmp_dest(i):
         return jmp_addr
     #
     return None
+#
+
+def get_jmp_dest(i):
+    return get_jmp_dest_str(i.mnemonic, i.op_str)
 #
 
 def get_block_codes(f, block, ins_mgr):
