@@ -83,11 +83,22 @@ if __name__ == "__main__":
             #
 
             should_fix = False
+            fix_op = "b"
+            clean_prev = False
+            #所有thumb的bx都是假的
             if (mne == "bx" and op_str.find("lr") == -1 and op_str.find("pc") == -1 and op_str.find("lr") == -1):
                 should_fix = True
+                clean_prev = True
+                fix_op = "b"
             #
             elif (mne.find("mov")>-1 and op_str.startswith("pc")):
                 should_fix = True
+                fix_op = "b"
+            #
+            elif (mne == "blx" and op_str[0] != "#"):
+                #print("this is blx:%s"%ins_str)
+                should_fix = True
+                fix_op = "blx"
             #
             if (should_fix):
                 nbytes_this = len(item["bytes"])
@@ -119,18 +130,25 @@ if __name__ == "__main__":
                         print("jump target %s addr 0x%08X from addr 0x%08X not in target so first return to target so addr [0x%08X] skip patch..." %(next_libname, next_addr, addr, first_ret_addr))
                         continue
                     #
-                    prev_item = trace_list[prev_id]
-                    nprev = len(prev_item["bytes"])
-                    b = bytearray([0]*nprev)
-                    prev_addr = prev_item["addr"]
-                    f.seek(prev_addr, 0)
-                    print("zero 0x%08X size %d"%(prev_addr, nprev))
-                    f.write(b)
 
-                    #所有thumb的bx都是假的
-                    asm_str = "b #0x%08x"%next_addr
+                    #add_cref
+                    #define fl_JF
+                    if (clean_prev):
+                        prev_item = trace_list[prev_id]
+                        nprev = len(prev_item["bytes"])
+                        b = bytearray([0]*nprev)
+                        prev_addr = prev_item["addr"]
+                        f.seek(prev_addr, 0)
+                        print("zero 0x%08X size %d"%(prev_addr, nprev))
+                        f.write(b)
+                    #
+
+                    asm_str = "%s #0x%08x"%(fix_op, next_addr)
                     bs = bytearray(mgr.asm(asm_str, addr)[0])
-                    assert len(bs) == nbytes_this, "try to addr 0x%08X write nbytes %d, but actual len is %d, ins_str:[%s]"%(addr, len(bs), nbytes, asm_str)
+                    if (len(bs) != nbytes_this):
+                        print("warning try to addr 0x%08X write nbytes %d, but actual len is %d, ins_str:[%s]!!!"%(addr, len(bs), nbytes_this, asm_str))
+                        continue
+                    #
                     print("write 0x%08X size %d ins_str:[%s]"%(addr, nbytes_this, asm_str))
                     f.seek(addr, 0)
                     f.write(bs)
