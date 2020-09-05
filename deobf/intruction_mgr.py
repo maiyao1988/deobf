@@ -1,7 +1,7 @@
 import os
 import sys
 import capstone
-import keystone
+from .keystone_in import *
 from deobf.ins_helper import *
 
 class IntructionManger:
@@ -10,10 +10,10 @@ class IntructionManger:
         self.__is_thumb = is_thumb
         if (is_thumb):
             self.__cs = capstone.Cs(capstone.CS_ARCH_ARM, capstone.CS_MODE_THUMB)
-            self.__ks = keystone.Ks(keystone.KS_ARCH_ARM, keystone.KS_MODE_THUMB)
+            self.__ks = Ks(KS_ARCH_ARM, KS_MODE_THUMB)
         else:
             self.__cs = capstone.Cs(capstone.CS_ARCH_ARM, capstone.CS_MODE_ARM)
-            self.__ks = keystone.Ks(keystone.KS_ARCH_ARM, keystone.KS_MODE_ARM)
+            self.__ks = Ks(KS_ARCH_ARM, KS_MODE_ARM)
         #
     #
 
